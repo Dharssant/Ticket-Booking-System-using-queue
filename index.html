@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Booking System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+		<marquee style="color:white">Cancellation not available!!</marquee>
+        <h1 style="color:white">Ticket Booking System</h1>
+
+        <!-- Ticket Booking Form -->
+        <div class="form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" placeholder="Enter your name">
+            <label for="phone">Phone Number:</label>
+            <input type="text" id="phone" placeholder="Enter your phone number">
+            <button onclick="bookTicket()">Book a Ticket</button>
+        </div>
+
+        <div class="output">
+            <p id="output"></p>
+        </div>
+
+        <!-- Display Tickets Button -->
+        <button onclick="displayTickets()">Display Booked Tickets</button>
+
+        <!-- Cancellation Form -->
+        <div class="form">
+            <label for="cancelName">Cancel Ticket - Name:</label>
+            <input type="text" id="cancelName" placeholder="Enter your name">
+            <label for="cancelPhone">Phone Number:</label>
+            <input type="text" id="cancelPhone" placeholder="Enter your phone number">
+            <button onclick="cancelTicket()">Cancel Ticket</button>
+        </div>
+
+        <div class="output">
+            <p id="cancelOutput"></p>
+        </div>
+
+        <div class="ticket-list">
+            <h2>Booked Tickets:</h2>
+            <ul id="ticketList"></ul>
+        </div>
+    </div>
+
+    <script>
+        let tickets = [];
+        const maxTickets = 10;
+
+        // Book Ticket Function
+        function bookTicket() {
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+
+            if (name === "" || phone === "") {
+                document.getElementById('output').innerHTML = "Please enter both name and phone number.";
+                return;
+            }
+
+            if (tickets.length < maxTickets) {
+                tickets.push({ name, phone });
+                document.getElementById('output').innerHTML = `Ticket for ${name} (${phone}) booked successfully.`;
+                document.getElementById('name').value = '';
+                document.getElementById('phone').value = '';
+            } else {
+                document.getElementById('output').innerHTML = "Today's ticket is full. Meet you next day.";
+            }
+        }
+
+        // Display Tickets Function
+        function displayTickets() {
+            const ticketList = document.getElementById('ticketList');
+            ticketList.innerHTML = "";
+
+            if (tickets.length === 0) {
+                ticketList.innerHTML = "<li>No tickets booked yet.</li>";
+            } else {
+                tickets.forEach((ticket, index) => {
+                    ticketList.innerHTML += `<li>${index + 1}. Name: ${ticket.name}, Phone: ${ticket.phone}</li>`;
+                });
+            }
+        }
+
+        // Cancel Ticket Function
+        function cancelTicket() {
+            const name = document.getElementById('cancelName').value;
+            const phone = document.getElementById('cancelPhone').value;
+
+            if (name === "" || phone === "") {
+                document.getElementById('cancelOutput').innerHTML = "Please enter both name and phone number.";
+                return;
+            }
+
+            const index = tickets.findIndex(ticket => ticket.name === name && ticket.phone === phone);
+
+            if (index !== -1) {
+                tickets.splice(index, 1);
+                document.getElementById('cancelOutput').innerHTML = `Ticket for ${name} (${phone}) cancelled successfully.`;
+            } else {
+                document.getElementById('cancelOutput').innerHTML = "Ticket not found.";
+            }
+
+            document.getElementById('cancelName').value = '';
+            document.getElementById('cancelPhone').value = '';
+        }
+    </script>
+</body>
+</html>
